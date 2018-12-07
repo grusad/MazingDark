@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=2]
 
-[sub_resource type="SpatialMaterial" id=6]
+[sub_resource type="SpatialMaterial" id=1]
 
 render_priority = 0
 flags_transparent = false
@@ -52,20 +52,20 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Albedo", "Metallic", "Roughness" ]
 
-[sub_resource type="CubeMesh" id=4]
+[sub_resource type="CubeMesh" id=2]
 
-material = SubResource( 6 )
+material = SubResource( 1 )
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 size = Vector3( 2, 2, 2 )
 subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="BoxShape" id=7]
+[sub_resource type="BoxShape" id=3]
 
 extents = Vector3( 1, 1, 1 )
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=4]
 
 render_priority = 0
 flags_transparent = false
@@ -117,16 +117,16 @@ proximity_fade_enable = false
 distance_fade_enable = false
 _sections_unfolded = [ "Albedo", "Anisotropy", "Clearcoat", "Distance Fade", "Emission", "Metallic", "NormalMap", "Proximity Fade", "Refraction", "Rim", "Roughness", "Transmission", "UV1" ]
 
-[sub_resource type="CubeMesh" id=1]
+[sub_resource type="CubeMesh" id=5]
 
-material = SubResource( 3 )
+material = SubResource( 4 )
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 size = Vector3( 2, 8, 2 )
 subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="BoxShape" id=5]
+[sub_resource type="BoxShape" id=6]
 
 extents = Vector3( 1, 4, 1 )
 
@@ -144,9 +144,10 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 4 )
+mesh = SubResource( 2 )
 skeleton = NodePath("..")
 material/0 = null
+_sections_unfolded = [ "Geometry", "material" ]
 
 [node name="StaticBody" type="StaticBody" parent="Floor" index="0"]
 
@@ -162,7 +163,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="Floor/StaticBody" index="0"]
 
-shape = SubResource( 7 )
+shape = SubResource( 3 )
 disabled = false
 
 [node name="Wall" type="MeshInstance" parent="." index="1"]
@@ -176,7 +177,7 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 1 )
+mesh = SubResource( 5 )
 skeleton = NodePath("..")
 material/0 = null
 _sections_unfolded = [ "Geometry", "LOD", "Transform", "material" ]
@@ -195,7 +196,7 @@ _sections_unfolded = [ "Collision", "Transform", "Visibility" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="Wall/StaticBody" index="0"]
 
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 disabled = false
 _sections_unfolded = [ "Transform", "Visibility" ]
 
