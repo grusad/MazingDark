@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/386929__burghrecords__footsteps-indoor-soft.wav" type="AudioStream" id=2]
@@ -9,7 +9,12 @@
 radius = 1.0
 height = 1.0
 
-[sub_resource type="CubeMesh" id=2]
+[sub_resource type="CapsuleShape" id=2]
+
+radius = 1.0
+height = 1.0
+
+[sub_resource type="CubeMesh" id=3]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 size = Vector3( 2, 2, 2 )
@@ -17,7 +22,9 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[node name="Player" type="KinematicBody"]
+[node name="Player" type="KinematicBody" groups=[
+"player",
+]]
 
 input_ray_pickable = true
 input_capture_on_drag = false
@@ -83,8 +90,10 @@ reverb_bus_uniformity = 0.0
 
 [node name="CollisionShape" type="CollisionShape" parent="HitBox" index="0"]
 
-shape = null
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+shape = SubResource( 2 )
 disabled = false
+_sections_unfolded = [ "Transform" ]
 
 [node name="WalkingAudio" type="AudioStreamPlayer3D" parent="." index="3"]
 
@@ -115,7 +124,7 @@ unit_db = 0.0
 unit_size = 1.0
 max_db = 3.0
 pitch_scale = 1.0
-autoplay = false
+autoplay = true
 max_distance = 0.0
 out_of_range_mode = 0
 bus = "Breating"
@@ -140,8 +149,10 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 2 )
+mesh = SubResource( 3 )
 skeleton = NodePath("..")
 material/0 = null
+
+[connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
 
 

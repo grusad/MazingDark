@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/orb_obtain.wav-4a61f28cadf11b60617e448691475d50.sample"
+
+[deps]
+
+source_file="res://assets/orb_obtain.wav"
+dest_files=[ "res://.import/orb_obtain.wav-4a61f28cadf11b60617e448691475d50.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

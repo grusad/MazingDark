@@ -1,12 +1,29 @@
 extends KinematicBody
 
+onready var sight_ray = $SightRay
+
 var grid_map;
 var player;
 
 const MOVE_SPEED = 2
+const SPRINT_SPEED = 3.5
+var sprint = false
 
 var cur_path = []
 var cur_goal = null
+
+func _ready():
+	sight_ray.add_exception(self)
+	set_physics_process(false)
+	
+
+func _process(delta):
+	if sight_ray.is_colliding() and sight_ray.get_collider().is_in_group("player"):
+		sprint = true
+	else:
+		sprint = false
+
+	
 
 func _physics_process(delta):
 	
@@ -21,9 +38,13 @@ func _physics_process(delta):
 	var offset = g - translation
 	if offset.length_squared() < 0.1:
 		cur_path.pop_front()
-		#print("reached: ", cur_path.pop_front())
 	offset = offset.normalized()
-	move_and_collide(offset * MOVE_SPEED * delta)
+	
+	var cur_speed = MOVE_SPEED
+	
+	if sprint:
+		cur_speed = SPRINT_SPEED
+	move_and_collide(offset * cur_speed * delta)
 	translation.y = 1
 
 func get_path():

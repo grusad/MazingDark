@@ -19,6 +19,8 @@ var rotation_helper
 
 var MOUSE_SENSITIVITY = 0.05
 
+var collected_orbs = 0
+
 func _ready():
 	camera = $Rotation_Helper/Camera
 	rotation_helper = $Rotation_Helper
@@ -126,5 +128,8 @@ func _input(event):
 
 
 
+
 func _on_HitBox_area_entered(area):
-	print("orb")
+	if area.is_in_group("orb"):
+		collected_orbs += 1
+		area.collect()

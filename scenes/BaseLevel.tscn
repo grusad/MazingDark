@@ -9,7 +9,7 @@
 
 background_mode = 1
 background_sky_custom_fov = 0.0
-background_color = Color( 0.046875, 0, 0, 1 )
+background_color = Color( 0.0321321, 0.046875, 0.0396187, 1 )
 background_energy = 1.0
 background_canvas_max_layer = 0
 ambient_light_color = Color( 0, 0, 0, 1 )
@@ -69,11 +69,11 @@ glow_levels/2 = false
 glow_levels/3 = true
 glow_levels/4 = false
 glow_levels/5 = true
-glow_levels/6 = false
-glow_levels/7 = false
-glow_intensity = 0.8
+glow_levels/6 = true
+glow_levels/7 = true
+glow_intensity = 1.0
 glow_strength = 1.0
-glow_bloom = 0.0
+glow_bloom = 1.0
 glow_blend_mode = 2
 glow_hdr_threshold = 1.0
 glow_hdr_scale = 2.0
@@ -82,9 +82,9 @@ adjustment_enabled = true
 adjustment_brightness = 1.0
 adjustment_contrast = 1.0
 adjustment_saturation = 1.0
-_sections_unfolded = [ "Ambient Light", "Auto Exposure", "Background", "Fog", "Glow", "SS Reflections", "SSAO", "Tonemap" ]
+_sections_unfolded = [ "Ambient Light", "Auto Exposure", "Background", "Fog", "Glow", "Glow/levels", "SS Reflections", "SSAO", "Tonemap" ]
 
-[node name="BaseLevel" type="Spatial"]
+[node name="BaseLevel" type="Spatial" index="0"]
 
 [node name="Player" parent="." index="0" instance=ExtResource( 1 )]
 
@@ -150,5 +150,7 @@ pitch_scale = 1.0
 autoplay = true
 mix_target = 0
 bus = "Ambient"
+
+[node name="Objects" type="Spatial" parent="." index="6"]
 
 

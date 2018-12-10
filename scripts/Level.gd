@@ -25,6 +25,6 @@ func _ready():
 	for x in range(width):
 		for z in range(depth):
 			if map.get_cell_item(x, 0, z) < 0:
-				map.set_cell_item(x, -3, z, 1)
+				map.set_cell_item(x, -2, z, 1)
 	
 	
