@@ -5,8 +5,8 @@ onready var sight_ray = $SightRay
 var grid_map;
 var player;
 
-const MOVE_SPEED = 2
-const SPRINT_SPEED = 3.5
+const MOVE_SPEED = 1.5
+const SPRINT_SPEED = 3
 var sprint = false
 
 var cur_path = []
@@ -14,7 +14,7 @@ var cur_goal = null
 
 func _ready():
 	sight_ray.add_exception(self)
-	set_physics_process(false)
+	#set_physics_process(false)
 	
 
 func _process(delta):

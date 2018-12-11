@@ -1,6 +1,6 @@
 extends KinematicBody
 
-onready var walking_audio_stream = $WalkingAudio;
+onready var walking_audio_stream = $Walking;
 
 var vel = Vector3()
 const MAX_WALK_SPEED = 5
@@ -8,8 +8,9 @@ const MAX_SPRINT_SPEED = 10
 const JUMP_SPEED = 18
 const ACCEL= 4.5
 
-var is_running = false
+
 var dir = Vector3()
+var is_walking = false
 
 const DEACCEL= 16
 const MAX_SLOPE_ANGLE = 40
@@ -38,51 +39,53 @@ func process_input(delta):
 
     # ----------------------------------
     # Walking
-    dir = Vector3()
-    var cam_xform = camera.get_global_transform()
-
-    var input_movement_vector = Vector2()
-
-    if Input.is_action_pressed("movement_forward"):
-        input_movement_vector.y += 1
-    if Input.is_action_pressed("movement_backward"):
-        input_movement_vector.y -= 1
-    if Input.is_action_pressed("movement_left"):
-        input_movement_vector.x -= 1
-    if Input.is_action_pressed("movement_right"):
-        input_movement_vector.x = 1
-
-    input_movement_vector = input_movement_vector.normalized()
-
-    dir += -cam_xform.basis.z.normalized() * input_movement_vector.y
-    dir += cam_xform.basis.x.normalized() * input_movement_vector.x
-    # ----------------------------------
-
-    # ----------------------------------
-    # Jumping
-
-    # ----------------------------------
-    # Capturing/Freeing the cursor
-    if Input.is_action_just_pressed("ui_cancel"):
-        if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
-            Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-        else:
-            Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-    # ----------------------------------
+	
+	dir = Vector3()
+	var cam_xform = camera.get_global_transform()
+	var input_movement_vector = Vector2()
+	
+	if Input.is_action_pressed("movement_forward"):
+		input_movement_vector.y += 1
 	
 	
+	if Input.is_action_pressed("movement_backward"):
+		input_movement_vector.y -= 1
+	
+	
+	if Input.is_action_pressed("movement_left"):
+		input_movement_vector.x -= 1
+	
+	if Input.is_action_pressed("movement_right"):
+		input_movement_vector.x = 1
+	
+	
+	
+		
+	if input_movement_vector.x != 0 or input_movement_vector.y != 0:
+		is_walking = true
+	else:
+		is_walking = false
+		
+		
+		
+	input_movement_vector = input_movement_vector.normalized()
+	dir += -cam_xform.basis.z.normalized() * input_movement_vector.y
+	dir += cam_xform.basis.x.normalized() * input_movement_vector.x
+	
+	
+	if Input.is_action_just_pressed("ui_cancel"):
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			
+			
 
 func process_movement(delta):
 	
-	if Input.is_action_pressed("movement_sprint"):
-		is_running = true
-	else:
-		is_running = false
 	
 	var TARGET_SPEED = MAX_WALK_SPEED
 	
-	if is_running:
-		TARGET_SPEED = MAX_SPRINT_SPEED
 	
 	dir.y = 0
 	dir = dir.normalized()
@@ -104,10 +107,12 @@ func process_movement(delta):
 	vel.x = hvel.x
 	vel.z = hvel.z
 	
-	if vel.length() > 0 and !walking_audio_stream.playing:
+	
+	
+	if is_walking and !walking_audio_stream.playing:
 		walking_audio_stream.play()
-		
-	elif vel.length() < 0.01 and walking_audio_stream.playing:
+
+	if !is_walking and walking_audio_stream.playing:
 		walking_audio_stream.stop()
 	
 	

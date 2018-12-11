@@ -7,15 +7,20 @@ onready var animation_player = $AnimationPlayer
 var obtained_sound_done = false
 var obtained_animation_done = false
 
+var being_collected = false
+
+func _ready():
+	particle.emitting = true
+
 func _process(delta):
-	
-	print("sound done:", obtained_sound_done)
-	print("animation done:", obtained_animation_done)
 	
 	if obtained_sound_done and obtained_animation_done:
 		queue_free()
 
 func collect():
+	if being_collected:
+		return
+	being_collected = true
 	obtaines_sound.play()
 	animation_player.connect("animation_finished", self, "_on_AnimationPlayer_finished")
 	animation_player.play("obtained")

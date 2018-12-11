@@ -228,14 +228,14 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 2 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.2, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector3( 1, 1, 1 ), Vector3( 0, 0, 0 ) ]
+"values": [ Vector3( 1, 1, 1 ), Vector3( 1.4, 1.4, 1.4 ), Vector3( 0, 0, 0 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("AudioStreamPlayer3D:attenuation_filter_db")
-tracks/1/interp = 1
+tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
@@ -243,14 +243,26 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ -24.0, -72.0 ]
+"values": [ -24.0, -80.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("MeshInstance/OmniLight:omni_range")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 2.0, 0.0 ]
 }
 
 [sub_resource type="SphereShape" id=10]
 
 radius = 0.241014
 
-[node name="Orb" type="Area" index="0" groups=[
+[node name="Orb" type="Area" groups=[
 "orb",
 ]]
 
@@ -325,7 +337,7 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-emitting = true
+emitting = false
 amount = 8
 lifetime = 1.0
 one_shot = false
@@ -399,6 +411,7 @@ emission_angle_filter_attenuation_db = -12.0
 attenuation_filter_cutoff_hz = 5000.0
 attenuation_filter_db = -24.0
 doppler_tracking = 0
+_sections_unfolded = [ "Attenuation Filter", "Doppler", "Emission Angle" ]
 
 [connection signal="finished" from="ObtainedSound" to="." method="_on_ObtainedSound_finished"]
 

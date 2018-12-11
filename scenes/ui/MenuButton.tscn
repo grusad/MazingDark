@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/fonts/new_rules_64.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scenes/ui/MenuButton.gd" type="Script" id=2]
+
+[node name="MenuButton" type="Button" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 1040.0
+margin_bottom = 70.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 1 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Text goes here"
+flat = true
+align = 0
+script = ExtResource( 2 )
+_sections_unfolded = [ "custom_fonts" ]
+
+

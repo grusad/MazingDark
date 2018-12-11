@@ -11,7 +11,7 @@ height = 1.0
 [sub_resource type="SpatialMaterial" id=2]
 
 render_priority = 0
-flags_transparent = false
+flags_transparent = true
 flags_unshaded = false
 flags_vertex_lighting = false
 flags_no_depth_test = false
@@ -31,7 +31,7 @@ params_point_size = 1.0
 params_billboard_mode = 0
 params_grow = false
 params_use_alpha_scissor = false
-albedo_color = Color( 0, 0, 0, 0.34502 )
+albedo_color = Color( 0, 0, 0, 0.54 )
 metallic = 0.0
 metallic_specular = 0.5
 metallic_texture_channel = 0
@@ -58,7 +58,7 @@ uv2_triplanar = false
 uv2_triplanar_sharpness = 1.0
 proximity_fade_enable = false
 distance_fade_enable = false
-_sections_unfolded = [ "Albedo", "Metallic", "Vertex Color" ]
+_sections_unfolded = [ "Albedo", "Flags", "Metallic", "Vertex Color" ]
 
 [sub_resource type="CapsuleMesh" id=3]
 
@@ -100,7 +100,7 @@ roughness = 0.0
 roughness_texture_channel = 0
 emission_enabled = true
 emission = Color( 1, 0.763441, 0.763441, 1 )
-emission_energy = 8.0
+emission_energy = 16.0
 emission_operator = 0
 emission_on_uv2 = false
 normal_enabled = false
@@ -135,7 +135,7 @@ radial_segments = 64
 rings = 32
 is_hemisphere = false
 
-[node name="Monster" type="KinematicBody"]
+[node name="Monster" type="KinematicBody" index="0"]
 
 input_ray_pickable = true
 input_capture_on_drag = false
@@ -173,13 +173,13 @@ lod_max_hysteresis = 0.0
 mesh = SubResource( 3 )
 skeleton = NodePath("..")
 material/0 = null
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Geometry", "Transform", "Visibility", "material" ]
 
 [node name="Eyes" type="Spatial" parent="." index="2"]
 
 [node name="Eye" type="MeshInstance" parent="Eyes" index="0"]
 
-transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0.28, 1, -0.5 )
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0.22, 1, -0.5 )
 layers = 1
 material_override = null
 cast_shadow = 1
@@ -196,7 +196,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Eye2" type="MeshInstance" parent="Eyes" index="1"]
 
-transform = Transform( 0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, -0.28, 1, -0.5 )
+transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, -0.22, 1, -0.5 )
 layers = 1
 material_override = null
 cast_shadow = 1
@@ -222,7 +222,7 @@ pitch_scale = 1.0
 autoplay = true
 max_distance = 25.0
 out_of_range_mode = 0
-bus = "Master"
+bus = "whisper"
 area_mask = 1
 emission_angle_enabled = false
 emission_angle_degrees = 45.0

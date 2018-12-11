@@ -1,0 +1,69 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/textures/noise.jpg" type="Texture" id=1]
+[ext_resource path="res://assets/textures/vignetting_effect.jpg" type="Texture" id=2]
+[ext_resource path="res://scripts/DarkFilmRect.gd" type="Script" id=3]
+
+[sub_resource type="Shader" id=1]
+
+code = "shader_type canvas_item;
+render_mode unshaded;
+ 
+uniform float randx;
+uniform float randy;
+uniform float grain_scale : hint_range(0.0, 1.0);
+uniform sampler2D noise_tex;
+uniform sampler2D vignette_tex;
+ 
+ 
+void fragment()
+{
+    vec4 col = texture(SCREEN_TEXTURE, SCREEN_UV);
+    float lum = col.r * 0.299 + col.g * 0.587 + col.b * 0.114;
+   
+    vec2 offset = vec2(randx,randy);
+    vec4 noise = texture(noise_tex, mod(SCREEN_UV * grain_scale + offset, 1.0));
+    vec4 v_fade = texture(vignette_tex, SCREEN_UV);
+   
+    COLOR.rgb = vec3(lum, lum, lum) * noise.rgb * v_fade.rgb;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+
+render_priority = 0
+shader = SubResource( 1 )
+shader_param/randx = null
+shader_param/randy = null
+shader_param/grain_scale = null
+shader_param/noise_tex = ExtResource( 1 )
+shader_param/vignette_tex = ExtResource( 2 )
+_sections_unfolded = [ "shader_param" ]
+
+[node name="OldScreen" type="CanvasLayer"]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+
+[node name="ColorRect" type="ColorRect" parent="." index="0"]
+
+material = SubResource( 2 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+color = Color( 1, 1, 1, 1 )
+script = ExtResource( 3 )
+_sections_unfolded = [ "Material" ]
+grain_bounce = 0.4
+frame_switch_time = 0.08
+
+
