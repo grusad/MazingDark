@@ -1,14 +1,24 @@
 extends Spatial
 
+export (PackedScene) var level_scene
+
+onready var fade = $CanvasLayer/ColorRect/Fade
+onready var anim_player = $AnimationPlayer
+
 func _ready():
+	fade.fade_in()
 
-	
-	for button in $CanvasLayer/Control/Menu/CenterRow/Buttons.get_children():
-		button.connect("mouse_entered", self, "on_button_mouse_entetered")
+func _on_Start_pressed():
+	fade.fade_out()
+	fade.connect("fade_finished", self, "on_fade_finished")
+	anim_player.play("fade_out")
 
+func _on_Options_pressed():
+	pass # replace with function body
+
+
+func _on_Exit_pressed():
+	get_tree().quit()
 	
-	
-	
-func on_button_mouse_entetered():
-	$ButtonSound.play()
-		
+func on_fade_finished(anim_name):
+	get_tree().change_scene_to(level_scene)

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/ui/CutScene.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/Level01.tscn" type="PackedScene" id=2]
+
+[node name="Scene_02" instance=ExtResource( 1 )]
+
+next_scene = ExtResource( 2 )
+
+[node name="Label" parent="CenterContainer" index="0"]
+
+margin_left = 380.0
+margin_top = 312.0
+margin_right = 899.0
+margin_bottom = 408.0
+text = "To survive the maze, collect all 
+the glowing orbs scattered around the maze.
+The orbs emits sonar sounds, find them!"
+align = 1
+
+

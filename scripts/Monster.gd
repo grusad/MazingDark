@@ -1,6 +1,7 @@
 extends KinematicBody
 
 onready var sight_ray = $SightRay
+onready var attack_ray = $AttackRay
 
 var grid_map;
 var player;
@@ -22,6 +23,10 @@ func _process(delta):
 		sprint = true
 	else:
 		sprint = false
+	
+	if attack_ray.is_colliding() and attack_ray.get_collider().is_in_group("player"):
+		attack_ray.get_collider().kill()
+		print("here")
 
 	
 

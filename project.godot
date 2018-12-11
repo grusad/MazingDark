@@ -11,13 +11,15 @@ config_version=3
 [application]
 
 config/name="MazingDark"
-run/main_scene="res://scenes/Level01.tscn"
+run/main_scene="res://scenes/ui/SplashScreen.tscn"
 config/icon="res://icon.png"
 
 [display]
 
 window/size/width=1280
 window/size/height=720
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
 
 [input]
 

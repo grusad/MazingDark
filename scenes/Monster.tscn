@@ -135,7 +135,7 @@ radial_segments = 64
 rings = 32
 is_hemisphere = false
 
-[node name="Monster" type="KinematicBody" index="0"]
+[node name="Monster" type="KinematicBody"]
 
 input_ray_pickable = true
 input_capture_on_drag = false
@@ -240,5 +240,12 @@ exclude_parent = true
 cast_to = Vector3( 0, 0, -20 )
 collision_mask = 1
 _sections_unfolded = [ "Transform", "Visibility" ]
+
+[node name="AttackRay" type="RayCast" parent="." index="5"]
+
+enabled = true
+exclude_parent = true
+cast_to = Vector3( 0, 0, -1 )
+collision_mask = 1
 
 

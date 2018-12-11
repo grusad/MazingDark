@@ -105,7 +105,7 @@ __meta__ = {
 
 [node name="Camera" type="Camera" parent="." index="1"]
 
-transform = Transform( 0.939693, -0.196175, 0.280166, 0, 0.819152, 0.573576, -0.34202, -0.538986, 0.769751, 23, 9, 23 )
+transform = Transform( 0.939693, -0.196175, 0.280166, 0, 0.819152, 0.573576, -0.34202, -0.538986, 0.769751, 16, 8, 24 )
 keep_aspect = 1
 cull_mask = 1048575
 environment = null
@@ -186,7 +186,7 @@ light_cull_mask = -1
 
 [node name="HorrorLight8" parent="." index="15" instance=ExtResource( 2 )]
 
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 14, 4, 14 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 13, 4, 19 )
 light_cull_mask = -1
 
 [node name="DirectionalLight" type="DirectionalLight" parent="." index="16"]

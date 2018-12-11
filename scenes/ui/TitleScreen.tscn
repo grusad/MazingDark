@@ -1,26 +1,110 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://scripts/TitleScreen.gd" type="Script" id=1]
-[ext_resource path="res://scenes/ui/OldScreen.tscn" type="PackedScene" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
-[ext_resource path="res://scenes/ui/MenuButton.tscn" type="PackedScene" id=4]
-[ext_resource path="res://assets/fonts/New Rules - Demo.ttf" type="DynamicFontData" id=5]
-[ext_resource path="res://scenes/ui/Menu3DScene.tscn" type="PackedScene" id=6]
-[ext_resource path="res://assets/ambient_ghost.ogg" type="AudioStream" id=7]
-[ext_resource path="res://assets/button_hover.wav" type="AudioStream" id=8]
+[ext_resource path="res://scenes/ui/tutorials/Scene_01.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/textures/noise.jpg" type="Texture" id=3]
+[ext_resource path="res://assets/textures/vignetting_effect.jpg" type="Texture" id=4]
+[ext_resource path="res://scripts/DarkFilmRect.gd" type="Script" id=5]
+[ext_resource path="res://scenes/ui/Fade.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/fonts/murder.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://scenes/ui/MenuButton.tscn" type="PackedScene" id=8]
+[ext_resource path="res://assets/fonts/conjuring.ttf" type="DynamicFontData" id=9]
+[ext_resource path="res://scenes/ui/Menu3DScene.tscn" type="PackedScene" id=10]
+[ext_resource path="res://assets/main_theme.wav" type="AudioStream" id=11]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="Shader" id=1]
+
+code = "shader_type canvas_item;
+render_mode unshaded;
+ 
+uniform float randx;
+uniform float randy;
+uniform float grain_scale : hint_range(0.0, 1.0);
+uniform sampler2D noise_tex;
+uniform sampler2D vignette_tex;
+ 
+ 
+void fragment()
+{
+    vec4 col = texture(SCREEN_TEXTURE, SCREEN_UV);
+    float lum = col.r * 0.299 + col.g * 0.587 + col.b * 0.114;
+   
+    vec2 offset = vec2(randx,randy);
+    vec4 noise = texture(noise_tex, mod(SCREEN_UV * grain_scale + offset, 1.0));
+    vec4 v_fade = texture(vignette_tex, SCREEN_UV);
+   
+    COLOR.rgb = vec3(lum, lum, lum) * noise.rgb * v_fade.rgb;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+
+render_priority = 0
+shader = SubResource( 1 )
+shader_param/randx = null
+shader_param/randy = null
+shader_param/grain_scale = null
+shader_param/noise_tex = ExtResource( 3 )
+shader_param/vignette_tex = ExtResource( 4 )
+_sections_unfolded = [ "shader_param" ]
+
+[sub_resource type="DynamicFont" id=3]
+
+size = 256
+use_mipmaps = false
+use_filter = false
+font_data = ExtResource( 7 )
+_sections_unfolded = [ "Font", "Settings" ]
+
+[sub_resource type="DynamicFont" id=4]
 
 size = 20
 use_mipmaps = false
-use_filter = false
-font_data = ExtResource( 5 )
+use_filter = true
+font_data = ExtResource( 9 )
 _sections_unfolded = [ "Font", "Settings" ]
 
-[node name="TitleScreen" type="Spatial" index="0"]
+[sub_resource type="Animation" id=5]
+
+resource_name = "fade_out"
+length = 5.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("AudioStreamPlayer:volume_db")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, -80.0 ]
+}
+
+[sub_resource type="Animation" id=6]
+
+length = 5.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("AudioStreamPlayer:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ -80.0, 0.0 ]
+}
+
+[node name="TitleScreen" type="Spatial"]
 
 script = ExtResource( 1 )
 _sections_unfolded = [ "Anchor", "Margin" ]
+level_scene = ExtResource( 2 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." index="0"]
 
@@ -30,10 +114,9 @@ rotation = 0.0
 scale = Vector2( 1, 1 )
 transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 
-[node name="OldScreen" parent="CanvasLayer" index="0" instance=ExtResource( 2 )]
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" index="0"]
 
-[node name="Control" type="Control" parent="CanvasLayer" index="1"]
-
+material = SubResource( 2 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
@@ -44,8 +127,30 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
+color = Color( 1, 1, 1, 1 )
+script = ExtResource( 5 )
+_sections_unfolded = [ "Material", "Size Flags", "Visibility" ]
+grain_bounce = 0.4
+frame_switch_time = 0.08
 
-[node name="Menu" type="VBoxContainer" parent="CanvasLayer/Control" index="0"]
+[node name="Fade" parent="CanvasLayer/ColorRect" index="0" instance=ExtResource( 6 )]
+
+[node name="Control" type="Control" parent="CanvasLayer/ColorRect" index="1"]
+
+show_behind_parent = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Anchor", "Grow Direction", "Margin", "Size Flags", "Visibility" ]
+
+[node name="Menu" type="VBoxContainer" parent="CanvasLayer/ColorRect/Control" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -62,34 +167,39 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 alignment = 0
-_sections_unfolded = [ "Margin" ]
+_sections_unfolded = [ "Anchor", "Grow Direction", "Margin", "Rect", "Size Flags" ]
 
-[node name="Logo" type="TextureRect" parent="CanvasLayer/Control/Menu" index="0"]
+[node name="Title" type="Label" parent="CanvasLayer/ColorRect/Control/Menu" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 1040.0
-margin_bottom = 128.0
+margin_bottom = 211.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
-mouse_filter = 1
+mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
-size_flags_vertical = 1
-texture = ExtResource( 3 )
-stretch_mode = 4
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 3 )
+text = "Mazin'Dark"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "custom_fonts" ]
 
-[node name="CenterRow" type="HBoxContainer" parent="CanvasLayer/Control/Menu" index="1"]
+[node name="CenterRow" type="HBoxContainer" parent="CanvasLayer/ColorRect/Control/Menu" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 132.0
+margin_top = 215.0
 margin_right = 1040.0
-margin_bottom = 422.0
+margin_bottom = 385.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -99,14 +209,14 @@ size_flags_vertical = 3
 alignment = 0
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="Buttons" type="VBoxContainer" parent="CanvasLayer/Control/Menu/CenterRow" index="0"]
+[node name="Buttons" type="VBoxContainer" parent="CanvasLayer/ColorRect/Control/Menu/CenterRow" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 518.0
-margin_bottom = 290.0
+margin_bottom = 170.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -117,28 +227,28 @@ custom_constants/separation = 20
 alignment = 1
 _sections_unfolded = [ "Size Flags", "custom_constants" ]
 
-[node name="Start" parent="CanvasLayer/Control/Menu/CenterRow/Buttons" index="0" instance=ExtResource( 4 )]
+[node name="Start" parent="CanvasLayer/ColorRect/Control/Menu/CenterRow/Buttons" index="0" instance=ExtResource( 8 )]
 
-margin_top = 20.0
+margin_top = 11.0
 margin_right = 518.0
-margin_bottom = 90.0
+margin_bottom = 47.0
 text = "Start Game"
 
-[node name="Options" parent="CanvasLayer/Control/Menu/CenterRow/Buttons" index="1" instance=ExtResource( 4 )]
+[node name="Options" parent="CanvasLayer/ColorRect/Control/Menu/CenterRow/Buttons" index="1" instance=ExtResource( 8 )]
 
-margin_top = 110.0
+margin_top = 67.0
 margin_right = 518.0
-margin_bottom = 180.0
+margin_bottom = 103.0
 text = "Options"
 
-[node name="Exit" parent="CanvasLayer/Control/Menu/CenterRow/Buttons" index="2" instance=ExtResource( 4 )]
+[node name="Exit" parent="CanvasLayer/ColorRect/Control/Menu/CenterRow/Buttons" index="2" instance=ExtResource( 8 )]
 
-margin_top = 200.0
+margin_top = 123.0
 margin_right = 518.0
-margin_bottom = 270.0
+margin_bottom = 159.0
 text = "Exit"
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control/Menu/CenterRow" index="1"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/ColorRect/Control/Menu/CenterRow" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -146,7 +256,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 522.0
 margin_right = 1040.0
-margin_bottom = 290.0
+margin_bottom = 170.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -156,16 +266,16 @@ size_flags_vertical = 3
 use_top_left = false
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="Characters" type="TextureRect" parent="CanvasLayer/Control/Menu/CenterRow/CenterContainer" index="0"]
+[node name="Characters" type="TextureRect" parent="CanvasLayer/ColorRect/Control/Menu/CenterRow/CenterContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 259.0
-margin_top = 145.0
+margin_top = 85.0
 margin_right = 259.0
-margin_bottom = 145.0
+margin_bottom = 85.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -174,13 +284,13 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 stretch_mode = 0
 
-[node name="VersionLabel" type="Label" parent="CanvasLayer/Control/Menu" index="2"]
+[node name="VersionLabel" type="Label" parent="CanvasLayer/ColorRect/Control/Menu" index="2"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 426.0
+margin_top = 389.0
 margin_right = 1040.0
 margin_bottom = 560.0
 rect_pivot_offset = Vector2( 0, 0 )
@@ -189,33 +299,41 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 1 )
-text = "Version 0 5 5
-Crated by Alexander Gillberg with Godot Engine"
+custom_fonts/font = SubResource( 4 )
+text = "Version 0.5
+Created by Alexander Gillberg with Godot Engine"
 valign = 2
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Size Flags", "custom_fonts" ]
+_sections_unfolded = [ "Size Flags", "custom_colors", "custom_fonts" ]
 
-[node name="Menu3DScene" parent="." index="1" instance=ExtResource( 6 )]
+[node name="Menu3DScene" parent="." index="1" instance=ExtResource( 10 )]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." index="2"]
 
-stream = ExtResource( 7 )
+stream = ExtResource( 11 )
 volume_db = 0.0
 pitch_scale = 1.0
 autoplay = true
 mix_target = 0
-bus = "Ambient"
-
-[node name="ButtonSound" type="AudioStreamPlayer" parent="." index="3"]
-
-stream = ExtResource( 8 )
-volume_db = 0.0
-pitch_scale = 1.0
-autoplay = false
-mix_target = 0
 bus = "Master"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]
+
+root_node = NodePath("..")
+autoplay = "startup"
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 1.0
+anims/fade_out = SubResource( 5 )
+anims/startup = SubResource( 6 )
+blend_times = [  ]
+
+[connection signal="pressed" from="CanvasLayer/ColorRect/Control/Menu/CenterRow/Buttons/Start" to="." method="_on_Start_pressed"]
+
+[connection signal="pressed" from="CanvasLayer/ColorRect/Control/Menu/CenterRow/Buttons/Options" to="." method="_on_Options_pressed"]
+
+[connection signal="pressed" from="CanvasLayer/ColorRect/Control/Menu/CenterRow/Buttons/Exit" to="." method="_on_Exit_pressed"]
 
 
