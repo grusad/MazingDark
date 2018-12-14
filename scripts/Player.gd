@@ -8,9 +8,13 @@ const MAX_SPRINT_SPEED = 10
 const JUMP_SPEED = 18
 const ACCEL= 4.5
 
+signal dead
+
+var CAM_SHAKE = 0.01
 
 var dir = Vector3()
 var is_walking = false
+var is_dying = false
 
 const DEACCEL= 16
 const MAX_SLOPE_ANGLE = 40
@@ -30,12 +34,20 @@ func _ready():
 
 func _physics_process(delta):
 	
+	if is_dying:
+		CAM_SHAKE += delta * 0.02
+		$Rotation_Helper/Camera.v_offset = rand_range(-1, 1) * CAM_SHAKE
+		$Rotation_Helper/Camera.h_offset = rand_range(-1, 1) * CAM_SHAKE
+		return
+	
 	process_input(delta)
 	process_movement(delta)
 	
 	translation.y = 1
 
 func process_input(delta):
+	
+	
 
     # ----------------------------------
     # Walking
@@ -120,25 +132,37 @@ func process_movement(delta):
 	
 	vel = move_and_slide(vel, Vector3(0, 1, 0), 0.05, 4, deg2rad(MAX_SLOPE_ANGLE))
 	
+
+func _unhandled_input(event):
+	if event.is_action_pressed("ui_cancel") and event.is_pressed():
+		$UI/GameMenu.show()
+		get_tree().paused = true
+		print("paused")
+		
 	
-
-func _input(event):
-    if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-        rotation_helper.rotate_x(deg2rad(event.relative.y * MOUSE_SENSITIVITY * -1))
-        self.rotate_y(deg2rad(event.relative.x * MOUSE_SENSITIVITY * -1))
-
-        var camera_rot = rotation_helper.rotation_degrees
-        camera_rot.x = clamp(camera_rot.x, -70, 70)
-        rotation_helper.rotation_degrees = camera_rot
-
-
+	if is_dying:
+		return
+	
+	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		rotation_helper.rotate_x(deg2rad(event.relative.y * MOUSE_SENSITIVITY * -1))
+		self.rotate_y(deg2rad(event.relative.x * MOUSE_SENSITIVITY * -1))
+		var camera_rot = rotation_helper.rotation_degrees
+		camera_rot.x = clamp(camera_rot.x, -70, 70)
+		rotation_helper.rotation_degrees = camera_rot
+		
 
 
 func _on_HitBox_area_entered(area):
 	if area.is_in_group("orb"):
 		collected_orbs += 1
+		$UI/Control/OrbLabel.text = "Orbs " + str(collected_orbs) + "/5"
 		area.collect()
 		
 
 func kill():
-	get_tree().reload_current_scene()
+	#get_tree().reload_current_scene()
+	is_dying = true
+	walking_audio_stream.stop()
+	$Breathing.stop()
+	emit_signal("dead")
+

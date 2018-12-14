@@ -135,6 +135,9 @@ frame_switch_time = 0.08
 
 [node name="Fade" parent="CanvasLayer/ColorRect" index="0" instance=ExtResource( 6 )]
 
+pause_mode = 2
+_sections_unfolded = [ "Margin", "Pause", "Rect" ]
+
 [node name="Control" type="Control" parent="CanvasLayer/ColorRect" index="1"]
 
 show_behind_parent = true
@@ -310,6 +313,9 @@ _sections_unfolded = [ "Size Flags", "custom_colors", "custom_fonts" ]
 
 [node name="Menu3DScene" parent="." index="1" instance=ExtResource( 10 )]
 
+pause_mode = 2
+_sections_unfolded = [ "Pause" ]
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." index="2"]
 
 stream = ExtResource( 11 )
@@ -321,6 +327,7 @@ bus = "Master"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]
 
+pause_mode = 2
 root_node = NodePath("..")
 autoplay = "startup"
 playback_process_mode = 1
@@ -329,6 +336,7 @@ playback_speed = 1.0
 anims/fade_out = SubResource( 5 )
 anims/startup = SubResource( 6 )
 blend_times = [  ]
+_sections_unfolded = [ "Pause" ]
 
 [connection signal="pressed" from="CanvasLayer/ColorRect/Control/Menu/CenterRow/Buttons/Start" to="." method="_on_Start_pressed"]
 

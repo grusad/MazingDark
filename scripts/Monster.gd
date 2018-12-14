@@ -1,5 +1,7 @@
 extends KinematicBody
 
+signal done_killing
+
 onready var sight_ray = $SightRay
 onready var attack_ray = $AttackRay
 
@@ -7,11 +9,13 @@ var grid_map;
 var player;
 
 const MOVE_SPEED = 1.5
-const SPRINT_SPEED = 3
+const SPRINT_SPEED = 3.6
 var sprint = false
 
 var cur_path = []
 var cur_goal = null
+
+var is_attacking = false
 
 func _ready():
 	sight_ray.add_exception(self)
@@ -24,9 +28,11 @@ func _process(delta):
 	else:
 		sprint = false
 	
-	if attack_ray.is_colliding() and attack_ray.get_collider().is_in_group("player"):
+	if attack_ray.is_colliding() and attack_ray.get_collider().is_in_group("player") and !is_attacking:
 		attack_ray.get_collider().kill()
-		print("here")
+		$AnimationPlayer.play("attacking")
+		$Growl.play()
+		is_attacking = true
 
 	
 
@@ -104,3 +110,6 @@ func set_target(target):
 	
 func set_map(grid_map):
 	self.grid_map = grid_map
+
+func _on_Growl_finished():
+	emit_signal("done_killing")

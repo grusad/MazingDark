@@ -55,6 +55,7 @@ size_flags_vertical = 1
 color = Color( 0, 0, 0, 1 )
 script = ExtResource( 1 )
 _sections_unfolded = [ "Margin", "Rect" ]
+playback_speed = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="0"]
 

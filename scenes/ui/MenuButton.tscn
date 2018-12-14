@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://assets/fonts/conjuring_64.tres" type="DynamicFont" id=1]
+[ext_resource path="res://assets/fonts/conjuring_28.tres" type="DynamicFont" id=1]
 [ext_resource path="res://scripts/MenuButton.gd" type="Script" id=2]
 [ext_resource path="res://assets/button_hover.wav" type="AudioStream" id=3]
 
@@ -30,7 +30,7 @@ align = 0
 script = ExtResource( 2 )
 _sections_unfolded = [ "custom_fonts" ]
 
-[node name="Hover" type="AudioStreamPlayer" parent="." index="0"]
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." index="0"]
 
 stream = ExtResource( 3 )
 volume_db = 0.0
@@ -38,6 +38,8 @@ pitch_scale = 1.0
 autoplay = false
 mix_target = 0
 bus = "Master"
+
+[connection signal="mouse_entered" from="." to="." method="_on_MenuButton_mouse_entered"]
 
 [connection signal="pressed" from="." to="." method="_on_MenuButton_pressed"]
 
