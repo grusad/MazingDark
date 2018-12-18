@@ -15,6 +15,7 @@ func _ready():
 	monster.set_target(player)
 	
 	player.connect("dead", self, "on_player_dead")
+	player.set_orb_count(get_orb_count())
 	monster.connect("done_killing", self, "on_monster_done_killing")
 	
 	var cells = map.get_used_cells();
@@ -41,3 +42,6 @@ func on_player_dead():
 	
 func on_monster_done_killing():
 	get_tree().change_scene("res://scenes/ui/DeadScene.tscn")
+	
+func get_orb_count():
+	return $Objects.get_child_count()

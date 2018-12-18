@@ -1,11 +1,13 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
-[ext_resource path="res://scenes/ui/OldScreen.tscn" type="PackedScene" id=2]
-[ext_resource path="res://assets/breathing.wav" type="AudioStream" id=3]
-[ext_resource path="res://assets/386929__burghrecords__footsteps-indoor-soft.wav" type="AudioStream" id=4]
-[ext_resource path="res://assets/fonts/conjuring_28.tres" type="DynamicFont" id=5]
-[ext_resource path="res://scenes/ui/GameMenu.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/ui/WinScene.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/ui/OldScreen.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/breathing.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/386929__burghrecords__footsteps-indoor-soft.wav" type="AudioStream" id=5]
+[ext_resource path="res://scripts/UIHandler.gd" type="Script" id=6]
+[ext_resource path="res://assets/fonts/conjuring_28.tres" type="DynamicFont" id=7]
+[ext_resource path="res://scenes/ui/GameMenu.tscn" type="PackedScene" id=8]
 
 [sub_resource type="CapsuleShape" id=1]
 
@@ -61,6 +63,7 @@ axis_lock_angular_z = false
 collision/safe_margin = 0.001
 script = ExtResource( 1 )
 _sections_unfolded = [ "Pause", "Transform" ]
+win_scene = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="." index="0"]
 
@@ -87,7 +90,7 @@ size = 1.0
 near = 0.05
 far = 100.0
 
-[node name="OldScreen" parent="Rotation_Helper/Camera" index="0" instance=ExtResource( 2 )]
+[node name="OldScreen" parent="Rotation_Helper/Camera" index="0" instance=ExtResource( 3 )]
 
 [node name="HitBox" type="Area" parent="." index="2"]
 
@@ -137,7 +140,7 @@ material/0 = null
 
 [node name="Breathing" type="AudioStreamPlayer" parent="." index="4"]
 
-stream = ExtResource( 3 )
+stream = ExtResource( 4 )
 volume_db = -20.0
 pitch_scale = 1.0
 autoplay = true
@@ -147,7 +150,7 @@ _sections_unfolded = [ "Pause" ]
 
 [node name="Walking" type="AudioStreamPlayer" parent="." index="5"]
 
-stream = ExtResource( 4 )
+stream = ExtResource( 5 )
 volume_db = 0.0
 pitch_scale = 1.0
 autoplay = false
@@ -172,7 +175,13 @@ rotation = 0.0
 scale = Vector2( 1, 1 )
 transform = Transform2D( 1, 0, 0, 1, 0, 0 )
 
-[node name="Control" type="Control" parent="UI" index="0"]
+[node name="UIHandler" type="Node" parent="UI" index="0"]
+
+pause_mode = 2
+script = ExtResource( 6 )
+_sections_unfolded = [ "Pause" ]
+
+[node name="Control" type="Control" parent="UI" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -199,19 +208,19 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
-custom_fonts/font = ExtResource( 5 )
-text = "Orbs 0/5"
+custom_fonts/font = ExtResource( 7 )
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "custom_fonts" ]
 
-[node name="GameMenu" parent="UI" index="1" instance=ExtResource( 6 )]
+[node name="GameMenu" parent="UI" index="2" instance=ExtResource( 8 )]
 
 visible = false
 
 [connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
 
-[connection signal="open_menu" from="UI/GameMenu" to="." method="_on_GameMenu_open_menu"]
+[connection signal="pressed" from="UI/GameMenu/CenterContainer/Buttons/ExitGame" to="." method="_on_ExitGame_pressed"]
 
 
+[editable path="UI/GameMenu"]

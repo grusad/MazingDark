@@ -167,7 +167,7 @@ tracks/1/keys = {
 "values": [ -80.0, 20.0 ]
 }
 
-[node name="Monster" type="KinematicBody" index="0"]
+[node name="Monster" type="KinematicBody"]
 
 input_ray_pickable = true
 input_capture_on_drag = false
@@ -247,12 +247,12 @@ _sections_unfolded = [ "Transform" ]
 
 stream = ExtResource( 2 )
 attenuation_model = 0
-unit_db = 0.0
+unit_db = 10.0
 unit_size = 1.0
 max_db = 3.0
 pitch_scale = 1.0
 autoplay = true
-max_distance = 25.0
+max_distance = 30.0
 out_of_range_mode = 0
 bus = "whisper"
 area_mask = 1

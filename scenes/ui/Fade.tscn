@@ -40,7 +40,7 @@ tracks/0/keys = {
 "values": [ Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 1 ) ]
 }
 
-[node name="Fade" type="ColorRect"]
+[node name="Fade" type="ColorRect" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0

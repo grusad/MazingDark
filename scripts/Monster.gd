@@ -9,7 +9,7 @@ var grid_map;
 var player;
 
 const MOVE_SPEED = 1.5
-const SPRINT_SPEED = 3.6
+const SPRINT_SPEED = 4
 var sprint = false
 
 var cur_path = []

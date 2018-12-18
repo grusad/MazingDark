@@ -2,6 +2,8 @@ extends KinematicBody
 
 onready var walking_audio_stream = $Walking;
 
+export (PackedScene) var win_scene = null
+
 var vel = Vector3()
 const MAX_WALK_SPEED = 5
 const MAX_SPRINT_SPEED = 10
@@ -26,6 +28,9 @@ var MOUSE_SENSITIVITY = 0.05
 
 var collected_orbs = 0
 
+var quit = false
+var total_orb_count = 0
+
 func _ready():
 	camera = $Rotation_Helper/Camera
 	rotation_helper = $Rotation_Helper
@@ -33,6 +38,10 @@ func _ready():
 	
 
 func _physics_process(delta):
+	
+	if quit:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)	
+		get_tree().change_scene("res://scenes/ui/TitleScreen.tscn")
 	
 	if is_dying:
 		CAM_SHAKE += delta * 0.02
@@ -47,8 +56,6 @@ func _physics_process(delta):
 
 func process_input(delta):
 	
-	
-
     # ----------------------------------
     # Walking
 	
@@ -83,17 +90,14 @@ func process_input(delta):
 	input_movement_vector = input_movement_vector.normalized()
 	dir += -cam_xform.basis.z.normalized() * input_movement_vector.y
 	dir += cam_xform.basis.x.normalized() * input_movement_vector.x
-	
-	
-	if Input.is_action_just_pressed("ui_cancel"):
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		else:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		
 			
 			
 
 func process_movement(delta):
+	
+	if Input.is_action_just_pressed("ui_down"):
+		get_parent().get_tree().change_scene_to(win_scene)
 	
 	
 	var TARGET_SPEED = MAX_WALK_SPEED
@@ -133,12 +137,7 @@ func process_movement(delta):
 	vel = move_and_slide(vel, Vector3(0, 1, 0), 0.05, 4, deg2rad(MAX_SLOPE_ANGLE))
 	
 
-func _unhandled_input(event):
-	if event.is_action_pressed("ui_cancel") and event.is_pressed():
-		$UI/GameMenu.show()
-		get_tree().paused = true
-		print("paused")
-		
+func _input(event):
 	
 	if is_dying:
 		return
@@ -155,8 +154,11 @@ func _unhandled_input(event):
 func _on_HitBox_area_entered(area):
 	if area.is_in_group("orb"):
 		collected_orbs += 1
-		$UI/Control/OrbLabel.text = "Orbs " + str(collected_orbs) + "/5"
+		$UI/Control/OrbLabel.text = "Orbs " + str(collected_orbs) + "/" + str(total_orb_count)
 		area.collect()
+		
+		if collected_orbs == total_orb_count:
+			get_tree().change_scene_to(win_scene)
 		
 
 func kill():
@@ -166,3 +168,11 @@ func kill():
 	$Breathing.stop()
 	emit_signal("dead")
 
+
+func _on_ExitGame_pressed():
+	quit = true
+	get_tree().paused = false
+	
+func set_orb_count(count):
+	total_orb_count = count
+	
